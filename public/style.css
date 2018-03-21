@@ -62,4 +62,12 @@
     background-color: #FFFEC4;
     padding: 2px;
   }
+
+  .footer {
+    position: fixed;
+    left: 5px;
+    right: 5px;
+    bottom: 0;
+    font-size: 12px;
+}
   
