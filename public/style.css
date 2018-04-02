@@ -63,6 +63,11 @@
     padding: 2px;
   }
 
+  .container {
+    padding: 5%;
+    text-align: center;
+  }
+
   .footer {
     position: fixed;
     left: 5px;
