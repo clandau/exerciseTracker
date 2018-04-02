@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
@@ -9,3 +8,5 @@ const exerciseSchema = new Schema({
     duration: Number,
     date: { type: Date, default: Date.now }
 });
+
+const exercise = mongoose.model('exercise', exerciseSchema);

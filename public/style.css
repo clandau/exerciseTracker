@@ -9,6 +9,11 @@
     color: #222;
     background-color: #f5f5f5;
   }
+
+  .container {
+    padding: 5%;
+    text-align: center;
+  }
   
   h1 {
     font-weight: bold;
@@ -20,7 +25,7 @@
   }
   
   p {
-    max-width: 900px;
+    max-width: 1500px;
   }
   
   form {
@@ -61,11 +66,6 @@
     font-size: 1.2em;
     background-color: #FFFEC4;
     padding: 2px;
-  }
-
-  .container {
-    padding: 5%;
-    text-align: center;
   }
 
   .footer {
