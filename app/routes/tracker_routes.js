@@ -4,9 +4,8 @@ module.exports = function(app, db) {
         console.log('new user requested'); 
         const user = req.body.username;
         //check db to see if user there, if so throw error
-
         //then add new user to db
-        
+
         res.send(user);
     });
 
