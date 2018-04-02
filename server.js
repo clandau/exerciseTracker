@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const app = express();
+app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 
@@ -11,6 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
 });
+
 
 require('./app/routes')(app, {});
 app.listen(PORT, () => {
