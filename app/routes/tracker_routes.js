@@ -1,9 +1,13 @@
 module.exports = function(app, db) {
     app.post('/api/exercise/new-user', (req, res) => {
         //add a new user
-        res.send('new user requested'); 
-        const user = { username: req.body.username };
-        console.log(user);
+        console.log('new user requested'); 
+        const user = req.body.username;
+        //check db to see if user there, if so throw error
+
+        //then add new user to db
+        
+        res.send(user);
     });
 
     app.post('/api/exercise/add', (req, res) => {
@@ -12,9 +16,9 @@ module.exports = function(app, db) {
         const description = req.body.description;
         const duration = req.body.duration;
         const date = req.body.date;
-        res.send( {'userId': userId, 'description': description, 
+        const exercise = res.send( {'userId': userId, 'description': description,
         'duration' : duration, 'date': date });
-        console.log(userId, description, duration, date);
+        console.log(exercise);
     });
 
     app.get('/api/exercise/log/:userId', (req, res) => {

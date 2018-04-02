@@ -9,4 +9,4 @@ const exerciseSchema = new Schema({
     date: { type: Date, default: Date.now }
 });
 
-const exercise = mongoose.model('exercise', exerciseSchema);
+mongoose.model('Exercise', exerciseSchema);

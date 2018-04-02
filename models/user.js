@@ -7,4 +7,4 @@ const userSchema = new Schema({
     userName: { type: String, required: true, trim: true, match:  /^.{1,20}$/}
 });
 
-const User = mongoose.model('User', userSchema);
+mongoose.model('User', userSchema);

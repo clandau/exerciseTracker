@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
 require('./app/routes')(app, {});
 app.listen(PORT, () => {
     console.log('listening on port', PORT);
+    console.log(process.env.MONGO_URI);
 }); 
 
 // mongoose.connect(process.env.MONGODB_URI, (err) => {
