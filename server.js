@@ -22,7 +22,7 @@ app.listen(PORT, () => {
     console.log('listening on port', PORT);
 }); 
 
-// mongoose.connect(process.env.MONGODB_URI, (err) => {
-//     if(err) console.log('cannot connect to database', err);
-//     else console.log('connected to db');
-// });
+mongoose.connect(process.env.MONGODB_URI, (err) => {
+    if(err) console.log('cannot connect to database', err);
+    else console.log('connected to db');
+});
