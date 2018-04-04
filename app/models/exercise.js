@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
 
 // const exerciseSchema = new Schema({
@@ -9,17 +8,17 @@ const Schema = mongoose.Schema;
 //     date: { type: Date, default: Date.now }
 // });
 
-
 //decided to embed exercise activities inside one schema vs separating them out
 const exerciseSchema = new Schema({
-    userId: { type: string },
+    userId: { type: String },
     exercises: [
         {
-            description: string,
+            description: String,
             duration: Number,
             date: { type: Date, default: Date.now }
         }
     ]
-})
+});
 
-mongoose.model('Exercise', exerciseSchema);
+const Exercise = mongoose.model('Exercise', exerciseSchema);
+module.exports = Exercise;

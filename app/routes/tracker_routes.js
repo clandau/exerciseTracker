@@ -1,4 +1,9 @@
-module.exports = function(app, db) {
+const exercise = require('../models/exercise.js');
+const bodyParser = require('body-parser');
+
+module.exports = function(app) {
+    app.use(bodyParser.json());
+
     app.post('/api/exercise/new-user', (req, res) => {
         //add a new user
         console.log('new user requested'); 

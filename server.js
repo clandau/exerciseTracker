@@ -1,23 +1,22 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-
 dotenv.config();
-
-const app = express();
-app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.urlencoded({ extended: false }));
+const app = express();
+require('./app/routes/tracker_routes.js')(app);
+
+app.use(express.static('public'));
+//app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
 });
 
 
-require('./app/routes')(app, {});
+require('./app/routes/tracker_routes.js')(app, {});
 app.listen(PORT, () => {
     console.log('listening on port', PORT);
 }); 
