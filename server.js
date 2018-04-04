@@ -9,12 +9,11 @@ const app = express();
 require('./app/routes/tracker_routes.js')(app);
 
 app.use(express.static('public'));
-//app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
 });
-
 
 require('./app/routes/tracker_routes.js')(app, {});
 app.listen(PORT, () => {
