@@ -9,12 +9,7 @@
     color: #222;
     background-color: #f5f5f5;
   }
-
-  /* .form-div {
-    align-content: center;
-    background-color: #008080;
-  } */
-
+  
   #title {
     text-align: center;
   }
@@ -26,7 +21,6 @@
   
   h1 {
     font-weight: bold;
-    
   }
   
   .bold {
