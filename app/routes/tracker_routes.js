@@ -37,10 +37,12 @@ module.exports = function(app) {
             if(err) console.log(err);
             if(user === null) {
                 console.log('user not found');
-                return null;
+                res.status(404).send('user not found');
             }
-            console.log('added to database,', user);
-            return user;
+            else {
+                console.log('added to database');
+                res.status(200).send(user);
+            }
         });
     });
 
