@@ -13,7 +13,7 @@ module.exports = function(app) {
             if(err) console.log(err);
             else if(data !== null) {
                 console.log('user exists');
-                res.send('user exists');
+                res.send('user "' + user + '" already exists in database');
             }
             else {
                 //add new user to database
@@ -22,20 +22,26 @@ module.exports = function(app) {
                 newUser.save((err, data) => {
                     err ? console.log(err) : console.log(data);
                 });
+                res.send(user);
             }
         });        
-        res.send(user);
     });
 
     app.post('/api/exercise/add', (req, res) => {
-        //add an exercise
         const userId = req.body.userId;
         const description = req.body.description;
         const duration = req.body.duration;
         const date = req.body.date;
-        const exercise = res.send( {'userId': userId, 'description': description,
-        'duration' : duration, 'date': date });
-        console.log(exercise);
+        const exercise = { description : description, duration : duration, date : date};
+        Exercise.findOneAndUpdate({userId: userId}, {$push: {exercises: exercise}}, (err, user) => {
+            if(err) console.log(err);
+            if(user === null) {
+                console.log('user not found');
+                return null;
+            }
+            console.log('added to database,', user);
+            return user;
+        });
     });
 
     app.get('/api/exercise/log/:userId', (req, res) => {
