@@ -28,12 +28,13 @@ module.exports = function(app) {
     });
 
     app.post('/api/exercise/add', (req, res) => {
+        //add exercise
         const userId = req.body.userId;
         const description = req.body.description;
         const duration = req.body.duration;
         const date = req.body.date;
         const exercise = { description : description, duration : duration, date : date};
-        Exercise.findOneAndUpdate({userId: userId}, {$push: {exercises: exercise}}, (err, user) => {
+        Exercise.findOneAndUpdate({userId: userId}, {$push: {exercises: exercise}}, {new:true}, (err, user) => {
             if(err) console.log(err);
             if(user === null) {
                 console.log('user not found');
