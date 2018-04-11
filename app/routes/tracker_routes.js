@@ -13,7 +13,7 @@ module.exports = function(app) {
             if(err) console.log(err);
             else if(data !== null) {
                 console.log('user exists');
-                res.send('user "' + user + '" already exists in database');
+                res.status(404).send('user already exists');
             }
             else {
                 //add new user to database
@@ -22,7 +22,7 @@ module.exports = function(app) {
                 newUser.save((err, data) => {
                     err ? console.log(err) : console.log(data);
                 });
-                res.send(user);
+                res.status(200).send(user);
             }
         });        
     });
