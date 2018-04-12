@@ -32,7 +32,16 @@ module.exports = function(app) {
         const userId = req.body.userId;
         const description = req.body.description;
         const duration = req.body.duration;
-        const date = req.body.date;
+        let date = null;
+        if(!req.body.date) {
+            var dateObj = new Date();
+            var month = dateObj.getUTCMonth() + 1;
+            var day = dateObj.getUTCDate();
+            var year = dateObj.getUTCFullYear();
+            date = year + '-' + month + '-' + day;
+            console.log(date);
+        }
+        else date = req.body.date;
         const exercise = { description : description, duration : duration, date : date};
         Exercise.findOneAndUpdate({userId: userId}, {$push: {exercises: exercise}}, {new:true}, (err, user) => {
             if(err) console.log(err);
@@ -48,6 +57,25 @@ module.exports = function(app) {
     });
 
     app.get('/api/exercise/log/:userId', (req, res) => {
-        res.send({userId: req.params.userId, dates: (req.query.from + ' to ' + req.query.to), limit: req.query.limit});
+        //req url ex: /api/exercise/log/userId?from=2011-01-01&to=2013-12-31&limit=10
+        let limit = req.query.limit;
+        Exercise.findOne({userId: req.params.userId}).
+            select('exercises').
+            exec((err, data) => {
+                if(err) console.log(err);
+                //handle data
+                // console.log(data.exercises[0].date);
+                console.log(data.exercises.length);
+                res.status(200).send(data);
+            })
+        if(!req.query.from && !req.query.to) {
+            if(!limit) {
+                //show everything 
+            }
+            else {
+
+            }
+        }
+        //res.send({userId: req.params.userId, dates: (req.query.from + ' to ' + req.query.to), limit: req.query.limit});
     }); 
 };
