@@ -59,31 +59,24 @@ module.exports = function(app) {
     app.get('/api/exercise/log/:userId', (req, res) => {
         //req url ex: /api/exercise/log/userId?from=2011-01-01&to=2013-12-31&limit=10
         let id = req.params.userId;
-        let limit = req.query.limit;
-        Exercise.findOne({userId: id}).
+        // let limit = parseInt(req.query.limit);
+        let limit = 5;
+        const query = Exercise.findOne({userId: id}).
             select('exercises').
+            // sort('exercises.duration').
+            // limit(limit).
             exec((err, data) => {
                 if(err) console.log(err);
                 //handle data
-                // console.log(data.exercises[0].date);
-                console.log(data.exercises.length);
+                let dateString = data.exercises[0].date.
+                    toISOString().
+                    substring(0, 10);
                 const outputObj = {
                     user : id,
-                    from:  "date",
-                    to: "date",
-                    exercise:  'description goes here', //exercise here
+                    exercises : data.exercises,
                     total: data.exercises.length,
                 }
-                res.status(200).json(outputObj);
-            })
-        if(!req.query.from && !req.query.to) {
-            if(!limit) {
-                //show everything 
-            }
-            else {
-
-            }
-        }
-        //res.send({userId: req.params.userId, dates: (req.query.from + ' to ' + req.query.to), limit: req.query.limit});
-    }); 
-};
+                res.status(200).send(outputObj);
+            });
+    })
+}
