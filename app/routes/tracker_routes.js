@@ -7,7 +7,6 @@ module.exports = function(app) {
     app.post('/api/exercise/new-user', (req, res) => {
         //add a new user
         const user = req.body.username;
-        console.log('new user requested', user); 
         //check db to see if user there, if so throw error
         Exercise.findOne({'userId' : user}, (err, data) => {
             if(err) console.log(err);
@@ -17,12 +16,17 @@ module.exports = function(app) {
             }
             else {
                 //add new user to database
-                console.log('entering new user into DB');
                 let newUser = new Exercise({userId: user});
                 newUser.save((err, data) => {
-                    err ? console.log(err) : console.log(data);
+                    if(err) {
+                        console.log(err);
+                        return res.status(500).send(err);
+                    }
+                    else {
+                        res.status(200).
+                        json({'user': data.userId, '_id':data._id});
+                    }
                 });
-                res.status(200).send(user);
             }
         });        
     });
@@ -56,27 +60,55 @@ module.exports = function(app) {
         });
     });
 
+    // app.get('/api/exercise/log/:userId', (req, res) => {
+    //     //req url ex: /api/exercise/log/userId?from=2011-01-01&to=2013-12-31&limit=10
+    //     let id = req.params.userId;
+    //     // let limit = parseInt(req.query.limit);
+    //     let limit = 5;
+    //     const query = Exercise.findOne({userId: id}).
+    //         select('exercises').
+    //         // sort('exercises.duration').
+    //         // limit(limit).
+    //         exec((err, data) => {
+    //             if(err) console.log(err);
+    //             //handle data
+    //             let dateString = data.exercises[0].date.
+    //                 toISOString().
+    //                 substring(0, 10);
+    //             const outputObj = {
+    //                 user : id,
+    //                 exercises : data.exercises,
+    //                 total: data.exercises.length,
+    //             }
+    //             res.status(200).send(outputObj);
+    //         });
+    // });
+
     app.get('/api/exercise/log/:userId', (req, res) => {
         //req url ex: /api/exercise/log/userId?from=2011-01-01&to=2013-12-31&limit=10
         let id = req.params.userId;
-        // let limit = parseInt(req.query.limit);
-        let limit = 5;
-        const query = Exercise.findOne({userId: id}).
-            select('exercises').
-            // sort('exercises.duration').
-            // limit(limit).
+        let limit = parseInt(req.query.limit);
+        const from = req.query.from;
+        const to = req.query.to;
+        console.log(to, from);
+        const query = Exercise.find({userId: id}).
+            select('exercises.date exercises.description exercises.duration').
+            where('exercises.date').lt(to).
+            gte(from).
+            sort('exercises.duration').
+            limit(limit).
             exec((err, data) => {
                 if(err) console.log(err);
                 //handle data
-                let dateString = data.exercises[0].date.
-                    toISOString().
-                    substring(0, 10);
-                const outputObj = {
-                    user : id,
-                    exercises : data.exercises,
-                    total: data.exercises.length,
-                }
-                res.status(200).send(outputObj);
+                // let dateString = data.exercises[0].date.
+                //     toISOString().
+                //     substring(0, 10);
+                // const outputObj = {
+                //     user : id,
+                //     exercises : data.exercises,
+                //     total: data.exercises.length,
+                // }
+                res.status(200).send(data);
             });
-    })
+    });
 }
