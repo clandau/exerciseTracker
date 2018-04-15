@@ -10,7 +10,6 @@ module.exports = function(app) {
         const user = req.body.username;
         //check db to see if user there, if so throw error
         User.findOne({'userName' : user}, (err, data) => {
-        // Exercise.findOne({'userId' : user}, (err, data) => {
             if(err) console.log(err);
             else if(data !== null) {
                 console.log('user exists');
@@ -19,7 +18,6 @@ module.exports = function(app) {
             else {
                 //add new user to database
                 let newUser = new User({userName: user});
-                // let newUser = new Exercise({userId: user});
                 newUser.save((err, data) => {
                     if(err) {
                         console.log(err);
