@@ -1,4 +1,5 @@
 const Exercise = require('../models/exercise.js');
+const User = require('../models/user.js')
 const bodyParser = require('body-parser');
 
 module.exports = function(app) {
@@ -8,7 +9,8 @@ module.exports = function(app) {
         //add a new user
         const user = req.body.username;
         //check db to see if user there, if so throw error
-        Exercise.findOne({'userId' : user}, (err, data) => {
+        User.findOne({'userId' : user}, (err, data) => {
+        // Exercise.findOne({'userId' : user}, (err, data) => {
             if(err) console.log(err);
             else if(data !== null) {
                 console.log('user exists');
@@ -16,7 +18,8 @@ module.exports = function(app) {
             }
             else {
                 //add new user to database
-                let newUser = new Exercise({userId: user});
+                let newUser = new User({userId: user});
+                // let newUser = new Exercise({userId: user});
                 newUser.save((err, data) => {
                     if(err) {
                         console.log(err);
@@ -88,15 +91,16 @@ module.exports = function(app) {
         //req url ex: /api/exercise/log/userId?from=2011-01-01&to=2013-12-31&limit=10
         let id = req.params.userId;
         let limit = parseInt(req.query.limit);
-        const from = req.query.from;
-        const to = req.query.to;
+        const from = new Date(req.query.from).toISOString();
+        const to = new Date(req.query.to).toISOString();
         console.log(to, from);
-        const query = Exercise.find({userId: id}).
-            select('exercises.date exercises.description exercises.duration').
-            where('exercises.date').lt(to).
-            gte(from).
-            sort('exercises.duration').
-            limit(limit).
+        Exercise.find({userId: id},
+            {'exercises.date' : {$gte: from, $lte : to }}).
+            // select('exercises.date exercises.description exercises.duration').
+            // where('exercises.date').lt(to).
+            // gte(from).
+            // sort('exercises.duration').
+            // limit(limit).
             exec((err, data) => {
                 if(err) console.log(err);
                 //handle data

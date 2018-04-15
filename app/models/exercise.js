@@ -10,7 +10,11 @@ const Schema = mongoose.Schema;
 
 //decided to embed exercise activities inside one schema vs separating them out
 const exerciseSchema = new Schema({
-    userId: { type: String },
+    userName : String,
+    userId: { 
+        type: String,
+        ref: 'User',
+    },
     exercises: [
         {
             description: String,
