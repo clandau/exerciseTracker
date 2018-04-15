@@ -1,5 +1,5 @@
 const Exercise = require('../models/exercise.js');
-const User = require('../models/user.js')
+const User = require('../models/user.js');
 const bodyParser = require('body-parser');
 
 module.exports = function(app) {
@@ -9,7 +9,7 @@ module.exports = function(app) {
         //add a new user
         const user = req.body.username;
         //check db to see if user there, if so throw error
-        User.findOne({'userId' : user}, (err, data) => {
+        User.findOne({'userName' : user}, (err, data) => {
         // Exercise.findOne({'userId' : user}, (err, data) => {
             if(err) console.log(err);
             else if(data !== null) {
@@ -18,7 +18,7 @@ module.exports = function(app) {
             }
             else {
                 //add new user to database
-                let newUser = new User({userId: user});
+                let newUser = new User({userName: user});
                 // let newUser = new Exercise({userId: user});
                 newUser.save((err, data) => {
                     if(err) {
