@@ -34,56 +34,36 @@ module.exports = function(app) {
 
     app.post('/api/exercise/add', (req, res) => {
         //add exercise
-        const userId = req.body.userId;
+        const userId = req.body.userId;    
         const description = req.body.description;
         const duration = req.body.duration;
         let date = null;
-        if(!req.body.date) {
-            var dateObj = new Date();
-            var month = dateObj.getUTCMonth() + 1;
-            var day = dateObj.getUTCDate();
-            var year = dateObj.getUTCFullYear();
-            date = year + '-' + month + '-' + day;
-            console.log(date);
-        }
-        else date = req.body.date;
-        const exercise = { description : description, duration : duration, date : date};
-        Exercise.findOneAndUpdate({userId: userId}, {$push: {exercises: exercise}}, {new:true}, (err, user) => {
+        User.findOne({'userName' : userId }, (err, user) => {
             if(err) console.log(err);
-            if(user === null) {
-                console.log('user not found');
-                res.status(404).send('user not found');
+            else if(user === null) {
+                res.status(404).send('user does not exist');
             }
             else {
-                console.log('added to database');
-                res.status(200).send(user);
+                if(!req.body.date) {
+                    var dateObj = new Date();
+                    var month = dateObj.getUTCMonth() + 1;
+                    var day = dateObj.getUTCDate();
+                    var year = dateObj.getUTCFullYear();
+                    date = year + '-' + month + '-' + day;
+                }
+                else date = req.body.date;
+                const exercise = { userId : user._id ,description : description, duration : duration, date : date};
+                let newExercise = new Exercise(exercise);
+                newExercise.save((err, data) => {
+                    if(err) return res.status(500).send(err);
+                    else {
+                        res.status(200).
+                        json({ userId : data._id, userName : user.userName, description : data.description, duration : data.duration, date : data.date});
+                    }
+                });
             }
         });
     });
-
-    // app.get('/api/exercise/log/:userId', (req, res) => {
-    //     //req url ex: /api/exercise/log/userId?from=2011-01-01&to=2013-12-31&limit=10
-    //     let id = req.params.userId;
-    //     // let limit = parseInt(req.query.limit);
-    //     let limit = 5;
-    //     const query = Exercise.findOne({userId: id}).
-    //         select('exercises').
-    //         // sort('exercises.duration').
-    //         // limit(limit).
-    //         exec((err, data) => {
-    //             if(err) console.log(err);
-    //             //handle data
-    //             let dateString = data.exercises[0].date.
-    //                 toISOString().
-    //                 substring(0, 10);
-    //             const outputObj = {
-    //                 user : id,
-    //                 exercises : data.exercises,
-    //                 total: data.exercises.length,
-    //             }
-    //             res.status(200).send(outputObj);
-    //         });
-    // });
 
     app.get('/api/exercise/log/:userId', (req, res) => {
         //req url ex: /api/exercise/log/userId?from=2011-01-01&to=2013-12-31&limit=10
