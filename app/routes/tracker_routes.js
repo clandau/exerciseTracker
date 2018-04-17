@@ -34,7 +34,10 @@ module.exports = function(app) {
 
     app.post('/api/exercise/add', (req, res) => {
         //add exercise
-        const userId = req.body.userId;    
+        if(!req.body.userId) return res.send("no user entered");   
+        if(!req.body.description) return res.send('no description entered');
+        if(!req.body.duration) return res.send('no duration entered');
+        const userId = req.body.userId; 
         const description = req.body.description;
         const duration = req.body.duration;
         let date = null;
