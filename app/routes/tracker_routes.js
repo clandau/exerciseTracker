@@ -12,7 +12,6 @@ module.exports = function(app) {
         User.findOne({'userName' : user}, (err, data) => {
             if(err) console.log(err);
             else if(data !== null) {
-                console.log('user exists');
                 res.status(404).send('user already exists');
             }
             else {
@@ -40,7 +39,7 @@ module.exports = function(app) {
         const userId = req.body.userId; 
         const description = req.body.description;
         const duration = req.body.duration;
-        let date = null;
+        let date;
         User.findOne({'userName' : userId }, (err, user) => {
             if(err) console.log(err);
             else if(user === null) {
