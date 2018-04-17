@@ -71,16 +71,33 @@ module.exports = function(app) {
         //req url ex: /api/exercise/log/userId?from=2011-01-01&to=2013-12-31&limit=10
         let id = req.params.userId;
         let limit = parseInt(req.query.limit);
-        const from = new Date(req.query.from).toISOString();
-        const to = new Date(req.query.to).toISOString();
-        console.log(to, from);
+        let to, from;
+        if(req.query.from) {
+            from = new Date(req.query.from).toISOString();
+        }
+        if(req.query.to) {
+            to = new Date(req.query.to).toISOString();
+        }
         //find user 
-        User.findOne({'userName' : userId }, (err, user) => {
+        User.findOne({'userName' : id }, (err, user) => {
             if(err) console.log(err);
             else if(user === null) {
                 res.status(404).send('user does not exist');
             }
-            //find exercises by 
+            else {
+                Exercise.find({
+                    _id : user._id,
+                    date: {
+                        $lt: to ? to.getTime() : Date.now(),
+                        $gt: from ? from.getTime() : 0                     
+                    }
+                }).
+                    sort('date').
+                    limit(req.query.limit).
+                    exec((err, exercises) => {
+                    res.send(exercises)
+                });
+            }
         });
     });
 
