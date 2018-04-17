@@ -89,10 +89,11 @@ module.exports = function(app) {
                     userId: user._id,
                     date: {
                         $lt: to ? to : Date.now(),
-                        $gt: from ? from : 0                     
+                        $gt: from ? from  : 0 
+                                           
                     }
                 })
-                    .limit(req.query.limit)
+                    .limit(limit)
                     .sort('date')
                     .exec((err, exercises) => {
                         if(err) return console.log(err);
@@ -102,13 +103,13 @@ module.exports = function(app) {
                             from : from ? from : 'undefined',
                             to : to ? to : 'undefined',
                             log : exercises.map(ex => ({
-                                    description : ex.description, 
+                                    description : ex.description,
+                                    date: ex.date, 
                                     duration: ex.duration      
                                 })
                             ),
                             count : exercises.length
                         };
-                        
                         res.json(exerciseLog);
                 });
             }
