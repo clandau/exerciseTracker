@@ -25,7 +25,7 @@ module.exports = function(app) {
                     }
                     else {
                         res.status(200).
-                        json({'user': data.userId, '_id':data._id});
+                        json({'userName': data.userName, '_id':data._id});
                     }
                 });
             }
@@ -72,25 +72,20 @@ module.exports = function(app) {
         const from = new Date(req.query.from).toISOString();
         const to = new Date(req.query.to).toISOString();
         console.log(to, from);
-        Exercise.find({userId: id},
-            {'exercises.date' : {$gte: from, $lte : to }}).
-            // select('exercises.date exercises.description exercises.duration').
-            // where('exercises.date').lt(to).
-            // gte(from).
-            // sort('exercises.duration').
-            // limit(limit).
-            exec((err, data) => {
-                if(err) console.log(err);
-                //handle data
-                // let dateString = data.exercises[0].date.
-                //     toISOString().
-                //     substring(0, 10);
-                // const outputObj = {
-                //     user : id,
-                //     exercises : data.exercises,
-                //     total: data.exercises.length,
-                // }
-                res.status(200).send(data);
-            });
+        //find user 
+        User.findOne({'userName' : userId }, (err, user) => {
+            if(err) console.log(err);
+            else if(user === null) {
+                res.status(404).send('user does not exist');
+            }
+            //find exercises by 
+        });
     });
-}
+
+    app.get('/api/exercise/users', (req, res) => {
+        //get all users in an array
+        User.find({}, (err, users) => {
+            return err ? console.log(err) : res.status(200).json(users);
+        });
+    });
+}   
