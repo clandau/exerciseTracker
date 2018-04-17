@@ -101,9 +101,14 @@ module.exports = function(app) {
                             username : user.userName,
                             from : from ? from : 'undefined',
                             to : to ? to : 'undefined',
-                            count : exercises.length 
+                            log : exercises.map(ex => ({
+                                    description : ex.description, 
+                                    duration: ex.duration      
+                                })
+                            ),
+                            count : exercises.length
                         };
-                        // let exerciseLog = { count : exercises.length }
+                        
                         res.json(exerciseLog);
                 });
             }
