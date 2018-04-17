@@ -54,7 +54,7 @@ module.exports = function(app) {
                     date = year + '-' + month + '-' + day;
                 }
                 else date = req.body.date;
-                const exercise = { userId : user._id ,description : description, duration : duration, date : date};
+                const exercise = { userId : user._id , userName : user.userName, description : description, duration : duration, date : date};
                 let newExercise = new Exercise(exercise);
                 newExercise.save((err, data) => {
                     if(err) return res.status(500).send(err);
@@ -86,16 +86,25 @@ module.exports = function(app) {
             }
             else {
                 Exercise.find({
-                    _id : user._id,
+                    userId: user._id,
                     date: {
-                        $lt: to ? to.getTime() : Date.now(),
-                        $gt: from ? from.getTime() : 0                     
+                        $lt: to ? to : Date.now(),
+                        $gt: from ? from : 0                     
                     }
-                }).
-                    sort('date').
-                    limit(req.query.limit).
-                    exec((err, exercises) => {
-                    res.send(exercises)
+                })
+                    .limit(req.query.limit)
+                    .sort('date')
+                    .exec((err, exercises) => {
+                        if(err) return console.log(err);
+                        let exerciseLog = {
+                            _id : user._id,
+                            username : user.userName,
+                            from : from ? from : 'undefined',
+                            to : to ? to : 'undefined',
+                            count : exercises.length 
+                        };
+                        // let exerciseLog = { count : exercises.length }
+                        res.json(exerciseLog);
                 });
             }
         });
