@@ -68,7 +68,8 @@ module.exports = function(app) {
     });
 
     app.get('/api/exercise/log/:userId', (req, res) => {
-        //req url ex: /api/exercise/log/userId?from=2011-01-01&to=2013-12-31&limit=10
+        //returns an exercise log for the specified user
+        //optional parameters are dates to search to and from and maximum results
         let id = req.params.userId;
         let limit = parseInt(req.query.limit);
         let to, from;
@@ -89,7 +90,7 @@ module.exports = function(app) {
                     userId: user._id,
                     date: {
                         $lt: to ? to : Date.now(),
-                        $gt: from ? from  : 0 
+                        $gte: from ? from  : 0 
                                            
                     }
                 })
